@@ -1,0 +1,62 @@
+.topBar {
+  display: flex;
+  height: 2.5em;
+  width: 98.5%;
+  border-radius: 1.5em;
+  background-color: #3d3e51;
+  justify-content: space-between;
+  padding: 8px;
+}
+
+#imgContainer {
+  border-radius: 1em;
+  padding: 2px;
+  display: flex;
+  justify-content: space-evenly;
+  width: 140px;
+  background-color: #4c5265;
+}
+
+#buttonContainer{
+    display: flex;
+    justify-content: space-between;
+    float: right;
+    width: 180px;
+}
+
+.buttonIcon{
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    
+    font-size: 12px;
+    color: #212129;
+    font-weight: 800;
+}
+
+
+#iconContainer{
+    float: left;
+    width: 20px;
+    height: 20px;
+}
+
+span {
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  color: white;
+}
+
+button {
+  color: white;
+  border-radius: 1.5em;
+  border: none;
+  background-color: #4c5265;
+  cursor: pointer;
+}
+
+img {
+  border-radius: 1.5em;
+}

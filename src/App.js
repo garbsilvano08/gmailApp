@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
 import { CLIENT_ID, SCOPES } from "./components/utils";
-
-// Node Js Implementation
-// import axios from "axios";
-// import { getAllUrlParams } from "./components/utils";
+import Topbar from "./components/Topbar";
+import './App.css'
 
 function GmailApi() {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState({});
   const [tokenClient, setTokenClient] = useState({});
   const [tokenResponse, setTokenResponse] = useState({});
-  // Node Js Implementation
-  // const [signInRoute, setSignInRoute] = useState("");
+  const [emails, setEmails] = useState([]);
 
   useEffect(() => {
     /* global google */
@@ -31,7 +28,7 @@ function GmailApi() {
         scope: SCOPES,
         callback: (tokenResponse) => {
           console.log(tokenResponse);
-          setTokenResponse(tokenResponse)
+          setTokenResponse(tokenResponse);
         },
       })
     );
@@ -40,21 +37,25 @@ function GmailApi() {
     // tokenClient.requestAccessToken();
   }, []);
 
-  // Node Js Implementation
-  // useEffect(() => {
-  //   window.open(signInRoute,"_self");
-  // }, [signInRoute])
-
-  // useEffect(() => {
-
-  //   const currentUrl = window.location.href;
-  //   if(currentUrl.includes('code')){
-  //     testAccessToken(currentUrl)
-  //   }
-  // }, [])
+  useEffect(() => {
+    if (tokenResponse && tokenResponse.access_token) {
+      console.log("This Happened");
+      fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=5", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenResponse.access_token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setEmails(data.messages));
+    } else {
+      console.log("Not Yet");
+    }
+  }, [tokenResponse]);
 
   const getEmails = () => {
-    tokenClient.requestAccessToken();
+    tokenClient.requestAccessToken({ prompt: "consent" });
   };
 
   const handleResponse = (response) => {
@@ -62,69 +63,46 @@ function GmailApi() {
     setUser(jwt_decode(response.credential));
     console.log(jwt_decode(response.credential));
     console.log(tokenClient);
+    console.log('true');
     document.getElementById("signInDiv").hidden = true;
   };
-
-  const handleSignOut = () => {
-    setUser();
-    document.getElementById("signInDiv").hidden = false;
-  };
-
-  // Node Js Implementation
-  // const testAuth = async () => {
-  //   const response = await axios.get("http://localhost:5000/auth/google", {
-  //     mode: "no-cors",
-  //     withCredentials: false,
-  //     headers: {
-  //       "Access-Control-Allow-Origin": "http://localhost:3000",
-  //       "Content-Type": "application/json",
-  //       "Access-Control-Allow-Credentials": "true",
-  //     },
-  //   });
-
-  //   setSignInRoute(response.data);
-  // };
-
-
-  // const testAccessToken = async (currentUrl) => {
-  //   console.log(currentUrl, "gab");
-  //   const code = getAllUrlParams(currentUrl).code;
-  //   const response = await axios.get(
-  //     "http://localhost:5000/auth/google/callback",
-  //     {
-  //       params: { code: `${code}` },
-  //       headers: {
-  //         "Access-Control-Allow-Origin": "*",
-  //         "Content-Type": "application/json",
-  //       },
-  //     }
-  //   );
-  // };
-
-  
 
   return (
     <div>
       <div id="signInDiv"></div>
-      {user ? (
+      {user && user.name ? (
+        <>
+          <Topbar setEmails={setEmails} user={user} getEmails={getEmails} setUser={setUser} />
+        </>
+      ) : null}
+      {emails.length > 0 ? (
         <div>
-          <img src={user.picture} /> <h3>{user.name}</h3>
-          <button onClick={handleSignOut}>SignOut</button>
-          <input type="submit" onClick={getEmails} value="Get Emails" />
+          {emails.map((email) => (
+            <div key={email.id}>
+              {email.snippet}
+              <h3>{email.id}</h3>
+              <button
+                onClick={() => {
+                  fetch(
+                    `https://gmail.googleapis.com/gmail/v1/users/me/messages/${email.id}`,
+                    {
+                      method: "GET",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${tokenResponse.access_token}`,
+                      },
+                    }
+                  )
+                    .then((response) => response.json())
+                    .then((data) => console.log("emails details", data));
+                }}
+              >
+                Test
+              </button>
+            </div>
+          ))}
         </div>
       ) : null}
-      {
-        tokenResponse && tokenResponse.access_token ?(
-          <>
-          <div>tokenResponse</div>
-          <h3>{user.name}</h3>
-          <h3> Access Token: {tokenResponse.access_token}</h3>
-          <h3>Scope: {tokenResponse.scope}</h3>
-          </>
-        ) : null
-      }
-      {/* Node implementation */}
-      {/* <button onClick={testAuth}>Login</button> */}
     </div>
   );
 }
