@@ -76,12 +76,13 @@ function GmailApi() {
             getEmails={getEmails}
             setUser={setUser}
           />
-        </>
-      ) : null}
-      {emails.length > 0 ? (
+          {emails.length > 0 ? (
         <EmailList emails={emails} tokenResponse={tokenResponse}/>
       ) : 
       <EmptyEmails />}
+        </>
+      ) : null}
+      
     </div>
   );
 }
