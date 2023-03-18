@@ -1,13 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
 *{
     font-family: 'Montserrat', sans-serif;
-    font-size: 12px;
-}
-
-button{
-    color: white;
-    border-radius: 1.5em;
-    border: none;
-    background-color: #4c5265;
-    cursor: pointer;
+    overflow: hidden;
 }

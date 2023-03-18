@@ -1,16 +1,1 @@
-button{
-    color: white;
-    border-radius: 1.5em;
-    border: none;
-    background-color: #4c5265;
-    cursor: pointer;
-}
 
-#signInDiv{
-    margin: auto;
-    width: 210px;
-    padding: 1.5em;
-    border-radius: 1em;
-    height: 40px;
-    background-color: #40445a;
-}
