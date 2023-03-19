@@ -12,6 +12,7 @@ const Email = ({indexKey, email, tokenResponse }) => {
   const [date, setDate] = useState("");
   const [emailBody, setEmailBody] = useState("");
   const [to, setTo] = useState("");
+  const [messageId, setMessageId] = useState("");
   const [showModal, setShowModal] = useState(false);
 
   const getHeader = (headers, name) => {
@@ -23,8 +24,6 @@ const Email = ({indexKey, email, tokenResponse }) => {
     });
     return value;
   };
-
-  console.log('key', indexKey);
 
   const handleShowModal = () => {
     setShowModal(true);
@@ -52,9 +51,7 @@ const Email = ({indexKey, email, tokenResponse }) => {
       .then((response) => response.json())
       .then((data) => {
         setHeaders(data.payload.headers);
-
-        // setEmailBody(data);
-
+        setMessageId(data.id);
         var parts = data.payload.parts;
         parts.forEach((part) => {
         //   const mimeType = part.mimeType;
@@ -67,7 +64,7 @@ const Email = ({indexKey, email, tokenResponse }) => {
 
   useEffect(() => {
     if (headers.length > 0) {
-      setTitle(getHeader(headers, "From"));
+      setTitle(getHeader(headers, "From").split('<')[0]);
       setSubject(getHeader(headers, "Subject"));
       setFrom(getHeader(headers, "From"));
       setDate(getHeader(headers, "Date"));
@@ -82,32 +79,30 @@ const Email = ({indexKey, email, tokenResponse }) => {
           className="emailsCon"
           onClick={() => {
             handleShowModal();
-            console.log("header", headers);
+            console.log(headers,'Gab');
           }}
         >
-          <p id="emailTitle">{title}</p>
+          <p id="emailTitle">{title.split('<')}</p>
           <p id="emailSubject">{subject}</p>
-          <p>{date}</p>
+          <p id="emailDate">{date}</p>
         </div>
       )}
 
       {/* Display the modal */}
         <Modal show={showModal} handleClose={handleCloseModal}>
-          <div id="emailDetails">
-            <p>
-                Subject: {subject}
-            </p>
-          <p>
-            From: {from}
-          </p>
-          <p>
-            To: {to}
-          </p>
-          <p>
-            Date: {date}
-          </p>
+          <div id="emailModalCon">
+          <form id="emailDetails">
+            <label for="subject">Subject: </label>
+            <input type="text" id="subject" name="subject" disabled value={subject}/>
+            <label for="from">From: </label>
+            <input type="text" id="from" name="from" disabled value={from}/>
+            <label for="to">To: </label>
+            <input type="text" id="to" name="to" disabled value={to}/>
+            <label for="date">Date: </label>
+            <input type="text" id="date" name="date" disabled value={date}/>
+          </form>
+          <div className="emailBody" id={`emailBody${indexKey}`}>{email.snippet}</div>
           </div>
-          <div className="emailBody" id={`emailBody${indexKey}`}></div>
         </Modal>
     </>
   );

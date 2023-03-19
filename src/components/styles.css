@@ -110,7 +110,7 @@ p#subtitle {
 .emailsCon {
   cursor: pointer;
   font-size: 8px;
-  border: 1px solid black;
+  border: 1px solid #757070;
   margin-top: 12px;
   margin-bottom: 12px;
   padding: 0.4em;
@@ -121,7 +121,8 @@ p#subtitle {
 
 #emailTitle{
   font-weight: 800;
-  width: 400px;
+  font-size: 12px;
+  width: 200px;
   font-size: 10px;
   color:black
 }
@@ -132,17 +133,35 @@ p#subtitle {
   max-width: 500px;
 }
 
-#emailDetails{
-  display: flex;
-  padding: 1em;
-  font-size: 12px;
-  justify-content: space-evenly;
-  background-color: white;
-  color: black;
+#emailDate{
+  text-align: right;
 }
 
+#emailDetails{
+  width: 200px;
+  display: block;
+  margin: auto;
+  font-size: 8px;
+}
+
+input[type=text] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 8px;
+}
+
+#emailModalCon{
+  display: flex;
+  justify-content: space-between;
+}
 
 .emailBody{
   overflow: auto;
   max-height: 400px;
+  max-width: 500px;
 }
